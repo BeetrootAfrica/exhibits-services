@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/exhibits_service/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/exhibits_service/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/exhibits_service",
+  "projects": {
+    "exhibits_service": {
+      "type": "application",
+      "root": "apps/exhibits_service",
+      "entryFile": "main",
+      "sourceRoot": "apps/exhibits_service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/exhibits_service/tsconfig.app.json"
+      }
+    }
+  }
+}
