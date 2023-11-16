@@ -18,6 +18,7 @@ import { Server } from 'socket.io';
 import { Questionnaire } from './entities/questionaire.entity';
 import { Exhibit } from './entities/exhibit.entity';
 import { SocketPayloadDTO } from '../sockets-gateway/dto/socket';
+import { WPService } from './wp';
 
 @WebSocketGateway({ cors: true, transports: ['websocket', 'polling'] })
 export class BeetrootServicesGateway {
@@ -27,6 +28,8 @@ export class BeetrootServicesGateway {
     private readonly socketService: SocketService,
     private readonly exhibitServiceService: ExhibitService,
     private readonly questionService: QuestionService,
+    private readonly wpServiceService: WPService,
+
   ) {}
 
   @SubscribeMessage('create-questionnaire')
@@ -154,7 +157,7 @@ export class BeetrootServicesGateway {
     console.log('authenticatedClient', authenticatedClient);
     if (authenticatedClient) {
       console.log('getting - posts');
-      const posts = await this.exhibitServiceService.getPosts();
+      const posts = await this.wpServiceService.fetchDataAndStore();
       // console.log('@posts', posts);
       if (1) {
         // on service call execution success, return the new call acknoledgement

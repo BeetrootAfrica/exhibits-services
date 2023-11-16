@@ -12,29 +12,14 @@ import { Observable } from 'rxjs';
 import { SocketService } from './service';
 import { Server, Socket } from 'socket.io';
 import { SocketAuthDTO } from './dto/socket';
-import { io } from "socket.io-client";
 
 @WebSocketGateway({ cors: true, transports: ['websocket', 'polling'] })
 export class SocketsGateway implements OnGatewayConnection {
   @WebSocketServer()
   server: Server;
-  private socket;
-
-  constructor(private readonly socketService: SocketService) {
-    this.socket = io('http://localhost:3006', {
-      reconnectionDelayMax: 10000,
-      auth: {
-        token: "123"
-      },
-      query: {
-        "my-key": "my-value"
-      }
-    }); // Specify the address of your Node.js WebSocket server
-    // this.sendMessageToNodeApp('seth');
-    this.getUserFromKYC('malin');
-    this.requestUserFromNodeApp('11');
-  }
+  constructor(private readonly socketService: SocketService) {}
   async handleConnection(socket: Socket) {
+    console.log('handleConnection')
     if (socket.handshake.auth['token']) {
       const user = await this.socketService.getUserFromAuthToken(
         socket.handshake.auth['token'],
@@ -48,32 +33,7 @@ export class SocketsGateway implements OnGatewayConnection {
       }
     }
   }
-  sendMessageToNodeApp(message: string) {
-    this.socket.emit('get-user', message);
-  }
 
-  async getUserFromKYC(message: string)  {
-    let user;
-    try {
-      const responses = await this.socket.emitWithAck("get-user", message);
-      console.log('responses',responses); // one response per client
-    } catch (e) {
-      console.log('error',e); 
-      // some clients did not acknowledge the event in the given delay
-    }
-  
-    //  this.socket.emitWithAck('get-user', message, (err, responses) => {
-    //   if (err) {
-    //     // some clients did not acknowledge the event in the given delay
-    //     console.log('err', err)
-    //   } else {
-    //     console.log(responses); // one response per client
-    //     console.log('err', responses)
-
-    //   }
-    // }
-    // );
-  }
 
   @SubscribeMessage('recieve-user')
   async recieveUser(
@@ -112,12 +72,7 @@ export class SocketsGateway implements OnGatewayConnection {
     return;
   }
 
-  requestUserFromNodeApp(userId: string) {
-    if (this.socket) {
-      console.log(`socket userId: ${userId}`);
-      this.socket.emit('getUserFromNodeApp', userId);
-    }
-  }
+
   private userFromNodeAppSubject = new Observable<any>((observer) => {
     this.server.on('userFromNodeApp', (user) => {
       observer.next(user);

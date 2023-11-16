@@ -25,12 +25,14 @@ import {
 } from './entities/questionaire.entity';
 import { ExhibitService } from './exhibit-service';
 import { MigrationService } from './migration-service';
+import { WPService } from './wp';
 
 @Controller('beetroot')
 export class BeetrootServicesController {
   constructor(
     private readonly questionService: QuestionService,     
     private readonly exhibitServiceService: ExhibitService,
+    private readonly wpServiceService: WPService,
     private readonly migrationService: MigrationService,
     ) {}
 
@@ -189,11 +191,10 @@ async saveQuestionnaireSectionQuestions(@Body() createQuestionDto: Questionnaire
     }
     return null;
   }
-  
-  @Get('get-posts')
-  async getPosts() {
+  @Get('get-wp-posts')
+  async getPostsFromWP() {
     console.log('getPosts');
-    const posts = await this.exhibitServiceService.getPosts();
+    const posts = await this.wpServiceService.fetchDataAndStore();
     console.log('getPosts rsp');
     if (posts) {
       const successData = {
@@ -203,7 +204,28 @@ async saveQuestionnaireSectionQuestions(@Body() createQuestionDto: Questionnaire
         errorMessage: null,
         successMessage: 'success',
       };
-      console.log('getQuestionnaires successData', successData);
+      console.log('wpServiceService.fetchDataAndStore successData posts.length', posts.length);
+      console.log('wpServiceService.fetchDataAndStore successData posts 1', posts[0]);
+
+      return successData;
+    }
+    return null;
+  }
+  @Get('get-posts')
+  async getPosts() {
+    console.log('getPosts');
+    const posts = await this.wpServiceService.fetchPosts();
+    console.log('getPosts rsp');
+    if (posts) {
+      const successData = {
+        status: 200,
+        data: JSON.stringify(posts),
+        error: null,
+        errorMessage: null,
+        successMessage: 'success',
+      };
+      console.log('wpServiceService.fetchDataAndStore successData posts.length', posts.length);
+      console.log('wpServiceService.fetchDataAndStore successData posts 1', posts[0]);
 
       return successData;
     }

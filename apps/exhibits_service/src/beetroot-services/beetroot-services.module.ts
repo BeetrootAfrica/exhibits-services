@@ -9,6 +9,7 @@ import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ExhibitService } from './exhibit-service';
+import { WPService } from './wp';
 import { ExhibitImage, Question, Questionnaire, QuestionnaireSection } from './entities/questionaire.entity';
 import { QuestionService } from './question-service';
 import { Editor } from './entities/beetroot-service.entity';
@@ -16,6 +17,13 @@ import { Exhibit, Dialogue, QuestionAnswer, Responses } from './entities/exhibit
 import { BeetrootServicesController } from './beetroot-services.controller';
 import { MigrationService } from './migration-service';
 import { SocketServicesModule} from '../sockets-gateway/socket-services.module'
+
+import {
+  Post
+} from './entities/post.entity';
+import { YoastHeadJson } from './entities/yoast-head-json.entity'; // Update the path accordingly
+import { OGImage } from './entities/og-image.entity'; // Update the path accordingly
+
 @Module({
   imports: [
     // forwardRef(() => SearchModule),
@@ -30,7 +38,10 @@ import { SocketServicesModule} from '../sockets-gateway/socket-services.module'
       Editor,
       ExhibitImage,
       QuestionAnswer, 
-      Responses
+      Responses,
+      Post,
+      YoastHeadJson,
+      OGImage
     ]),
   ],
   controllers: [
@@ -44,6 +55,7 @@ import { SocketServicesModule} from '../sockets-gateway/socket-services.module'
     QuestionService,
     SocketService,
     // SearchService,
+    WPService,
     MigrationService,
     JwtService,
 

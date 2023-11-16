@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
+console.log('process.env.DB_HOST', process.env.DB_HOST)
+console.log('process.env.DB_PORT', process.env.DB_PORT)
+console.log('process.env.DB_DATABASE', process.env.DB_DATABASE)
 @Module({
   imports: [
     TypeOrmModule.forRoot({

@@ -11,20 +11,8 @@ export class SocketService {
     @InjectRepository(ConnectedUser)
     private readonly connectedUserRepository: Repository<ConnectedUser>,
   ) {
-    // this.socket = io('http://localhost:3001', {
-    //   reconnectionDelayMax: 10000,
-    //   auth: {
-    //     token: "123"
-    //   },
-    //   query: {
-    //     "my-key": "my-value"
-    //   }
-    // }); // Specify the address of your Node.js WebSocket server
-    // this.sendMessageToNodeApp('hello');
   }
-  // sendMessageToNodeApp(message: string) {
-  //   this.socket.emit('get-user', message);
-  // }
+
 
   async socketRegisterUser(user, socket: Socket, status: string) {
     try {
@@ -33,10 +21,6 @@ export class SocketService {
       // console.log('new socket connection',user)
 
       if (userConnected) {
-        // console.log('socketRegisterUser. userExist', userConnected);
-        // console.log('socketRegisterUser. socket.id', socket.id);
-       
-
         if (status == 'offline') {
           // console.log('user connection status', status);
           userConnected.currentConnectionStatus = 'offline'
