@@ -27,7 +27,7 @@ import { ExhibitService } from './exhibit-service';
 import { MigrationService } from './migration-service';
 import { WPService } from './wp';
 
-@Controller('beetroot')
+@Controller('exhibits')
 export class BeetrootServicesController {
   constructor(
     private readonly questionService: QuestionService,     

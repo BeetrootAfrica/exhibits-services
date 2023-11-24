@@ -1,9 +1,28 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { v4 as uuidv4 } from 'uuid';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.connectMicroservice<MicroserviceOptions>(
+    {
+      
+      transport: Transport.KAFKA,
+      options: {
+        client: {
+          clientId: `exhibits`,
+          brokers: ['localhost:9092'],
+        },
+        consumer: {
+          groupId: 'exhibits-group',
+        },
+      },
+    },
+    { inheritAppConfig: true },
+  );  
+  
   const cors = {
     origin: "*",
   };
@@ -20,6 +39,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api-docs', app, document);
   app.enableCors(cors);
+  await app.startAllMicroservices();
   await app.listen(4006);
 }
 
