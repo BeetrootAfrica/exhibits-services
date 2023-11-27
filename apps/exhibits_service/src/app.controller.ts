@@ -31,22 +31,6 @@ export class AppController {
     private readonly appService: AppService) {}
 
 
-    // @MessagePattern('consume-kafka-topic')
-    // async consumeKafkaTopic() {
-    //   // Consume data with a specific Kafka topic
-    //   await this.consumerService.consume(
-    //     { topics: ['test'] },
-    //     {
-    //       eachMessage: async ({ topic, partition, message }) => {
-    //         console.log({
-    //           value: message.value.toString(),
-    //           topic: topic.toString(),
-    //           partition: partition.toString(),
-    //         });
-    //       },
-    //     },
-    //   );
-    // }
   @Get()
   getHello(): string {
     return this.appService.getHello();
@@ -63,6 +47,24 @@ export class AppController {
   }
 
   @MessagePattern('get-posts')
+  async getPosts(payload: any):Promise<any> {
+    console.log('get-posts:', payload);
+    const result = 'Processed successfully';
+    const posts = await this.wpServiceService.fetchPosts();
+    console.log('getPosts rsp');
+    if (posts) {
+      const successData = {
+        status: 200,
+        data: JSON.stringify(posts),
+        error: null,
+        errorMessage: null,
+        successMessage: 'success',
+      };
+      return successData;
+    }
+  }
+
+  @Get('get-posts')
   async consumeMessage(payload: any):Promise<any> {
     console.log('get-posts:', payload);
     const result = 'Processed successfully';
@@ -76,14 +78,10 @@ export class AppController {
         errorMessage: null,
         successMessage: 'success',
       };
-      // console.log('wpServiceService.fetchDataAndStore successData posts.length', posts.length);
-      // console.log('wpServiceService.fetchDataAndStore successData posts 1', posts[0]);
-
       return successData;
     }
-
-  // return posts;
   }
+
   @Post('postConnection')
   async postConnection(@Body() postConnection){
     console.log('postConnection', postConnection)
