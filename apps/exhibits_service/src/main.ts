@@ -5,6 +5,8 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { v4 as uuidv4 } from 'uuid';
 
 async function bootstrap() {
+  const MAIN_SERVICE_PORT = +process.env.MAIN_SERVICE_PORT
+
   const app = await NestFactory.create(AppModule);
   app.connectMicroservice<MicroserviceOptions>(
     {
@@ -13,7 +15,7 @@ async function bootstrap() {
       options: {
         client: {
           clientId: `exhibits`,
-          brokers: ['localhost:9092'],
+          brokers: [`localhost:${+process.env.KAFKA_PORT}`],
         },
         consumer: {
           groupId: 'exhibits-group',
@@ -40,7 +42,8 @@ async function bootstrap() {
   SwaggerModule.setup('api-docs', app, document);
   app.enableCors(cors);
   await app.startAllMicroservices();
-  await app.listen(4006);
+  await app.listen(MAIN_SERVICE_PORT);
+  console.log('running on', `localhost:${MAIN_SERVICE_PORT}`)
 }
 
 bootstrap();

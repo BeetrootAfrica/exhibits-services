@@ -18,7 +18,7 @@ import { WPService } from './beetroot-services/wp';
         options: {
           client: {
             clientId: 'exhibits',
-            brokers: ['localhost:9092'], // Update with your Kafka broker address
+            brokers: [`localhost:${+process.env.KAFKA_PORT}`], // Update with your Kafka broker address
           },
           consumer: {
             groupId: 'exhibits-group',

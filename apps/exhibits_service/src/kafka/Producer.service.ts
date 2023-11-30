@@ -7,7 +7,7 @@ export class ProucerService implements OnModuleInit, OnApplicationShutdown {
     // Connect to Kafka Server
     private readonly kafka = new Kafka({
         clientId: 'exhibits',
-        brokers: ['localhost:9092']
+        brokers: [`localhost:${+process.env.KAFKA_PORT}`]
     });
 
     private readonly producer: Producer = this.kafka.producer();
